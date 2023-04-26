@@ -14,15 +14,16 @@
 
 const express = require("express");
 const cookieParser = require("cookie-parser");
-const usersRouter = require('./routes/users.route');  // routes.users.route.js 생성 후 import
-const postsRouter = require('./routes/posts.route');  // routes.posts.route.js 생성 후 import
-const commentsRouter = require('./routes/comments.route'); // routes.comments.route.js 생성 후 import
+const usersRouter = require('./routes/users.route');  // routes/users.route.js 생성 후 import
+const postsRouter = require('./routes/posts.route');  // routes/posts.route.js 생성 후 import
+const commentsRouter = require('./routes/comments.route'); // routes/comments.route.js 생성 후 import
+const likesRouter = require('./routes/likes.route'); // routes/likes.route.js 생성 후 import
 const app = express();
 const PORT = 3000;
 
 app.use(express.json());
 app.use(cookieParser());
-app.use('/api', [usersRouter, postsRouter, commentsRouter]);  // userRouter, postsRouter, commentsRouter 사용 정의
+app.use('/api', [usersRouter, postsRouter, commentsRouter, likesRouter]);  // userRouter, postsRouter, commentsRouter 사용 정의
 
 app.listen(PORT, () => {
   console.log(PORT, '포트 번호로 서버가 실행되었습니다.');
