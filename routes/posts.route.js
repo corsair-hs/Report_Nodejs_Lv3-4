@@ -1,5 +1,5 @@
 const express = require('express');
-const { Posts } = require("../models"); // Posts DB 임포트
+const { Posts, Users } = require("../models"); // Posts DB 임포트
 const { Op } = require("sequelize");    // Op 임포트
 const authMiddleware = require("../middlewares/auth-middleware"); // 사용자 인증 미들웨어 임포트
 const router = express.Router();
@@ -48,7 +48,14 @@ router.post("/posts", authMiddleware, async (req, res) => {
 router.get("/posts", async (req, res) => {
   try {
     const posts = await Posts.findAll({
-      attributes: ["postId", "UserId", "Nickname", "title", "createdAt", "updatedAt"],
+      // attributes: ["postId", "UserId", "Nickname", "title", "createdAt", "updatedAt"],
+      attributes: ["postId", "userId", "nickname", "title", "createdAt", "updatedAt"],    // 오! 대소문자는 조금 달라도 잘 찾아서 출력해주네 UserId->userId
+      // include: [     // 테스트용
+      //   {
+      //     model: Users,
+      //     attributes: ["nickname"],
+      //   },
+      // ],
       order: [['createdAt', 'DESC']],
     });
 
