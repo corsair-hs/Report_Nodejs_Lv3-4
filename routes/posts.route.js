@@ -12,7 +12,7 @@ router.post("/posts", authMiddleware, async (req, res) => {
     // 로그인된 사용자를 구분하기 위해서 사용자 인증 미들웨어를 사용할 것임
     // 그러기 위해서는 맨위에 const authMiddleware = require("../middlewares/auth-middleware"); 임포트
     // router.post("/posts", authMiddleware, ... )를 등록해야함
-    const { userId, nickname } = res.locals.user;
+    const { userId } = res.locals.user;
     console.log(userId)
 
     // body 데이터에서 title, content 받아오고
@@ -28,7 +28,6 @@ router.post("/posts", authMiddleware, async (req, res) => {
       // Posts DB에 생성
       const post = await Posts.create({
         UserId: userId,
-        Nickname: nickname,
         title,
         content,
       });
@@ -48,18 +47,28 @@ router.post("/posts", authMiddleware, async (req, res) => {
 router.get("/posts", async (req, res) => {
   try {
     const posts = await Posts.findAll({
-      // attributes: ["postId", "UserId", "Nickname", "title", "createdAt", "updatedAt"],
-      attributes: ["postId", "userId", "nickname", "title", "createdAt", "updatedAt"],    // 오! 대소문자는 조금 달라도 잘 찾아서 출력해주네 UserId->userId
-      // include: [     // 테스트용
-      //   {
-      //     model: Users,
-      //     attributes: ["nickname"],
-      //   },
-      // ],
+      attributes: ["postId", "UserId", "title", "createdAt", "updatedAt"],
+      include: [
+        {
+          model: Users,
+          attributes: ["nickname"],
+        },
+      ],
       order: [['createdAt', 'DESC']],
     });
 
-    return res.status(200).json({ posts });
+    const postsResult = posts.map((item) => {
+      return {
+        postId: item.postId,
+        userId: item.UserId,
+        nickname: item.User.nickname,
+        title: item.title,
+        createdAt: item.createdAt,
+        updatedAt: item.updatedAt
+      }
+    });
+
+    return res.status(200).json({ posts: postsResult });
   } catch (error) {
     console.error(error);
     return res.status(400).json({ errorMessage: "게시글 조회에 실패하였습니다." });
@@ -72,11 +81,27 @@ router.get("/posts/:postId", async (req, res) => {
   try {
     const { postId } = req.params;
     const post = await Posts.findOne({
-      attributes: ["postId", "UserId", "Nickname", "title", "content", "createdAt", "updatedAt"],
+      attributes: ["postId", "UserId", "title", "content", "createdAt", "updatedAt"],
+      include: [
+        {
+          model: Users,
+          attributes: ["nickname"],
+        },
+      ],
       where: { postId }
     });
 
-    return res.status(200).json({ post });
+    const postResult = {
+        postId: post.postId,
+        userId: post.UserId,
+        nickname: post.User.nickname,
+        title: post.title,
+        content: post.content,
+        createdAt: post.createdAt,
+        updatedAt: post.updatedAt
+      };
+
+    return res.status(200).json({ post: postResult });
   } catch (error) {
     console.error(error);
     return res.status(400).json({ errorMessage: "게시글 조회에 실패하였습니다." });
