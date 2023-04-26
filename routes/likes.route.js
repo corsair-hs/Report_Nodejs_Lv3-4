@@ -1,6 +1,7 @@
 const express = require('express');
-const { Posts, Likes } = require("../models"); // Posts DB 임포트
+const { Posts, Users, Likes } = require("../models"); // Posts DB 임포트
 const { Op } = require("sequelize");    // Op 임포트
+const sequelize = require('sequelize');
 const authMiddleware = require("../middlewares/auth-middleware"); // 사용자 인증 미들웨어 임포트
 const router = express.Router();
 
@@ -22,8 +23,8 @@ router.put("/posts/:postId/like", authMiddleware, async (req, res) => {
     });
 
     if (!getExistLike) {
-      await Likes.create({ PostId: postId, UserId: userId});
-      return res.status(200).json({ message: "게시글의 좋아요를 등록하였습니다."});
+      await Likes.create({ PostId: postId, UserId: userId });
+      return res.status(200).json({ message: "게시글의 좋아요를 등록하였습니다." });
     } else {
       await Likes.destroy(
         {
@@ -32,7 +33,7 @@ router.put("/posts/:postId/like", authMiddleware, async (req, res) => {
           }
         }
       );
-      return res.status(200).json({ message: "게시글의 좋아요를 취소하였습니다."});
+      return res.status(200).json({ message: "게시글의 좋아요를 취소하였습니다." });
     };
   } catch (error) {
     console.error(error);
@@ -42,13 +43,28 @@ router.put("/posts/:postId/like", authMiddleware, async (req, res) => {
 
 
 // 좋아요 게시글 조회
-router.get("/posts/like", authMiddleware, async (req, res) => {
-  try {
+// router.get("/like", authMiddleware, async (req, res) => {
+//   try {
+//     const { userId } = res.locals.user;
 
-  } catch (error) {
-    console.error(error);
-    return res.status(400).json({ errorMessage: "좋아요 게시글 조회에 실패하였습니다." });
-  }
-})
+//     const getLikes = await Likes.findAll({
+//       attributes: [
+//         ['PostId', 'postId'], 
+//         ['UserId', 'userId'], 
+//         [sequelize.literal('(SELECT nickname FROM Users WHERE Users.userId = Likes.UserId)'), 'nickname'],
+//         [sequelize.literal('(SELECT title FROM Posts WHERE Posts.postId = Likes.PostId)'), 'title'],
+//         'createdAt', 
+//         'updatedAt',
+//         [sequelize.fn('COUNT', sequelize.col('PostId')), 'like'],
+//       ],
+//       group: ['PostId']
+//     })
+    
+//     return res.status(200).json({ posts: getLikes });
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(400).json({ errorMessage: "좋아요 게시글 조회에 실패하였습니다." });
+//   }
+// })
 
 module.exports = router;

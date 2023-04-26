@@ -1,6 +1,7 @@
 const express = require('express');
-const { Posts, Users } = require("../models"); // Posts DB 임포트
+const { Posts, Users, Likes } = require("../models"); // Posts DB 임포트
 const { Op } = require("sequelize");    // Op 임포트
+const sequelize = require('sequelize');
 const authMiddleware = require("../middlewares/auth-middleware"); // 사용자 인증 미들웨어 임포트
 const router = express.Router();
 
@@ -80,6 +81,28 @@ router.get("/posts", async (req, res) => {
 router.get("/posts/:postId", async (req, res) => {
   try {
     const { postId } = req.params;
+
+    if (postId === 'like') {
+      try {
+        const getLikes = await Likes.findAll({
+          attributes: [
+            ['PostId', 'postId'], 
+            ['UserId', 'userId'], 
+            [sequelize.literal('(SELECT nickname FROM Users WHERE Users.userId = (SELECT UserId FROM Posts WHERE Posts.postId = Likes.PostId))'), 'nickname'],
+            [sequelize.literal('(SELECT title FROM Posts WHERE Posts.postId = Likes.PostId)'), 'title'],
+            'createdAt', 
+            'updatedAt',
+            [sequelize.fn('COUNT', sequelize.col('PostId')), 'like'],
+          ],
+          group: ['PostId'],
+        })
+        return res.status(200).json({ posts: getLikes });
+      } catch (error) {
+        console.error(error);
+        return res.status(400).json({ errorMessage: "좋아요 게시글 조회에 실패하였습니다." });
+      }
+    }
+
     const post = await Posts.findOne({
       attributes: ["postId", "UserId", "title", "content", "createdAt", "updatedAt"],
       include: [
