@@ -17,7 +17,7 @@ const cookieParser = require("cookie-parser");
 const usersRouter = require('./routes/users.route');  // routes.users.route.js 생성 후 import
 const postsRouter = require('./routes/posts.route');  // routes.posts.route.js 생성 후 import
 const app = express();
-const PORT = 3018;
+const PORT = 3000;
 
 app.use(express.json());
 app.use(cookieParser());
