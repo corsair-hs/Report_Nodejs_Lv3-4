@@ -19,7 +19,8 @@ const cookieParser = require("cookie-parser");
 // const postsRouter = require('./routes/posts.route');
 // const commentsRouter = require('./routes/comments.route');
 // const likesRouter = require('./routes/likes.route'); 
-const routes = require('./routes');
+const routes = require('./routes');   // 한 번에 임포트
+
 const app = express();
 const PORT = 3000;
 
@@ -27,8 +28,11 @@ app.use(express.json());
 app.use(cookieParser());
 
 // app.use('/', [usersRouter, postsRouter, commentsRouter, likesRouter]);
-app.use('/', routes);
+app.use('/', routes);   // 한 번에 호출
 
 app.listen(PORT, () => {
   console.log(PORT, '포트 번호로 서버가 실행되었습니다.');
 })
+
+
+module.exports = app;

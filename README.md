@@ -1,6 +1,6 @@
 # 기능 구현은 했으나, 아직 미해결 부분
 
-## 좋아요 게시글 조회 기능
+## 1. 좋아요 게시글 조회 기능
 ### Issue-1: GET "/posts/like"
 게시글 상세조회( GET "posts/:postId")와의 충돌이 나는지,   
 like를 자꾸만 :postId로 인식하는 문제가 있음.   
@@ -32,7 +32,7 @@ getLikes.map()으로 순회하면서 setLikes 변수에 필요한 속성만 담�
 .   
 일단 위의 코드처럼 한 번에 뽑아내긴 했으나, RAW Query문이 들어갔으므로, 좋지 못한 코딩 같음
 
-## routes/index.route.js 활용 방법 찾아야 함
+## 2. routes/index.route.js 활용 방법 찾아야 함
 ### AS-IS: app.js 에서 route.js들 직접 임포트 및 호출 중
 ``` JavaScript
 const express = require("express");
@@ -95,3 +95,8 @@ Error: Cannot find module './routes'
 
 Node.js v18.15.0
 ```
+아... 혹시나 해본 방법이 되버렸다....   
+routes/index.route.js 파일명이 문제였나보다.   
+index.* 파일들은 보통 다른 데서도 기본 첫페이지를 담당하는 애들인데   
+이걸 임으로 다른 명칭을 사용했더니 안됬었나보다...   
+결론, index.js 파일명은 건들지 말 것
