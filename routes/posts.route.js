@@ -79,7 +79,7 @@ router.get("/posts", async (req, res) => {
 // 좋아요 게시글 조회
 router.get("/posts/like", authMiddleware, async (req, res) => {
   try {
-    const { userId } = res.locals.user;
+    res.locals.user;
     const getLikes = await Likes.findAll({
       attributes: [
         ['PostId', 'postId'], 
