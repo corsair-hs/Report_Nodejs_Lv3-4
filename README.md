@@ -24,10 +24,34 @@ const getLikes = await Likes.findAll({
     })
     return res.status(200).json({ posts: getLikes });
 ```
-원래는 아래처럼 include해서 getLikes에 모든 속성들을 담아놓고   
+원래는 (Users.nickname, Posts.title)을 include해서 getLikes에 모든 속성들을 담아놓고   
 getLikes.map()으로 순회하면서 setLikes 변수에 필요한 속성만 담으려 했으나,   
-가상으로 만든 Likes 같은 속성이 담기질 않음   
+가상으로 만든 Like 같은 속성이 담기질 않음   
 .
 그래서 [...getLikes].map()으로 내용을 아예 복사를 해서 map() 순회해봤으나 무용지물...   
 .   
-일단 위의 코드처럼 한번에 뽑아내긴 했으나, RAW SQL문이 들어갔으므로, 좋지 못한 코딩 같음
+일단 위의 코드처럼 한 번에 뽑아내긴 했으나, RAW Query문이 들어갔으므로, 좋지 못한 코딩 같음
+
+## routes/index.route.js 활용 방법 찾아야 함
+### AS-IS: app.js 에서 route.js들 직접 임포트 및 호출 중
+``` JavaScript
+const express = require("express");
+const cookieParser = require("cookie-parser");
+
+const usersRouter = require('./routes/users.route');  // 하나하나 임포트중
+const postsRouter = require('./routes/posts.route');
+const commentsRouter = require('./routes/comments.route');
+const likesRouter = require('./routes/likes.route');
+
+const app = express();
+const PORT = 3000;
+
+app.use(express.json());
+app.use(cookieParser());
+app.use('/', [usersRouter, postsRouter, commentsRouter, likesRouter]);  // 하나하나 호출
+
+app.listen(PORT, () => {
+  console.log(PORT, '포트 번호로 서버가 실행되었습니다.');
+})
+```
+### TO-BE: 
