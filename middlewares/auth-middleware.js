@@ -16,6 +16,11 @@ module.exports = async (req, res, next) => {
 
   // app.js에 cookie parser가 정상적으로 등록되있다면
   // req.cookies를 사용가능함.
+  
+  if (!authorization) {
+    // authorization header is missing
+    return res.status(401).json({ message: "로그인이 필요한 기능입니다." });
+  }
 
   const [tokenType, token] = authorization.split(" ");
   // cookie value에 Bearer afdafasfasf 적혀있는걸 구분해서 가져올거다.
