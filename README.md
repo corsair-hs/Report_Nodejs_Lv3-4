@@ -54,4 +54,44 @@ app.listen(PORT, () => {
   console.log(PORT, '포트 번호로 서버가 실행되었습니다.');
 })
 ```
-### TO-BE: 
+### TO-BE: routes/index.route.js 활용해서 app.js에서 한 번에 임포트 및 호출
+``` JavaScript
+const express = require('express');
+const cookieParser = require('cookie-parser');
+
+const routes = require('./routes'); // 한 번에 임포트
+
+const app = express();
+const port = 3000;
+
+app.use(express.json());
+app.use(cookieParser());
+
+app.use('/', routes); // 한 번에 호출
+
+app.listen(port, () => {
+  console.log(`Start listen Server: ${port}`);
+});
+
+module.exports = app;
+```
+이렇게 하면 될 것 같은데, 자꾸 에러 발생, /routes 경로를 왜 못찾는다고 하는건지원...
+``` bash
+node:internal/modules/cjs/loader:1078
+  throw err;
+  ^
+
+Error: Cannot find module './routes'
+    at Module._compile (node:internal/modules/cjs/loader:1254:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1308:10)
+    at Module.load (node:internal/modules/cjs/loader:1117:32)
+    at Module._load (node:internal/modules/cjs/loader:958:12)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\AllA\\Documents\\github-clone\\Report_Nodejs_Lv3-4\\app.js'
+  ]
+}
+
+Node.js v18.15.0
+```
