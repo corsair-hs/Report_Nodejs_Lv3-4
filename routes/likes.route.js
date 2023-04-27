@@ -42,7 +42,7 @@ router.put("/posts/:postId/like", authMiddleware, async (req, res) => {
 });
 
 
-// 좋아요 게시글 조회
+// 좋아요 게시글 조회 : 테스트용
 router.get("/like", authMiddleware, async (req, res) => {
   try {
     const { userId } = res.locals.user;
