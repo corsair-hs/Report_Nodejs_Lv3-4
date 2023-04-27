@@ -9,8 +9,7 @@ migrations로 tbl을 만든 후 진행한다면, models 파일들에 테이블 �
 그리고 프로젝트 진행시 테이블 속성값 불러올 때, migrations 파일들을 불러오면 되는 건인가?   
 에 대한 의문점이 아직 남아있음.   
 models를 이용안하고 migrations 파일들로만 프로젝트 구현 테스트 해봐야겠음.   
-### DB Table 생성, 프로젝트 시 불러올 Tbl 속성 파일들
-강의에서는 migrations
+
 ## 1. 좋아요 게시글 조회 기능
 ### Issue-1: GET "/posts/like"
 게시글 상세조회( GET "posts/:postId")와의 충돌이 나는지,   
