@@ -11,14 +11,14 @@ migrations로 tbl을 만든 후 진행한다면, models 파일들에 테이블 �
 models를 이용안하고 migrations 파일들로만 프로젝트 구현 테스트 해봐야겠음.   
 
 ## 1. 좋아요 게시글 조회 기능
-### Issue-1: GET "/posts/like"
+### Issue-1: GET "/posts/like" 소스 위치
 게시글 상세조회( GET "posts/:postId")와의 충돌이 나는지,   
 like를 자꾸만 :postId로 인식하는 문제가 있음.   
 그래서 "좋아요 게시글 조회" 소스를   
 posts.route.js의 "게시글 상세 조회" GET "/posts/:postId" 위에다 옮긴 점.   
 posts.route.js 쪽으로 옮기지 않고 해결할 방법 찾아야함   
 
-### Issue-2: GET "/posts/like"
+### Issue-2: GET "/posts/like" RAW Query
 ``` javascript
 const getLikes = await Likes.findAll({
       attributes: [
@@ -42,7 +42,7 @@ getLikes.map()으로 순회하면서 setLikes 변수에 필요한 속성만 담�
 .   
 일단 위의 코드처럼 한 번에 뽑아내긴 했으나, RAW Query문이 들어갔으므로, 좋지 못한 코딩 같음
 
-## 2. routes/index.route.js 활용 방법 찾아야 함
+## 2. routes/index.route.js 활용 방법 찾아야 함 (해결완료)
 ### AS-IS: app.js 에서 route.js들 직접 임포트 및 호출 중
 ``` JavaScript
 const express = require("express");
