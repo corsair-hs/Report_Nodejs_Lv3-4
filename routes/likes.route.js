@@ -42,34 +42,43 @@ router.put("/posts/:postId/like", authMiddleware, async (req, res) => {
 });
 
 
-// 좋아요 게시글 조회 : 테스트용
-router.get("/like", authMiddleware, async (req, res) => {
+// // 좋아요 게시글 조회
+router.get("/posts/like", authMiddleware, async (req, res) => {
   try {
-    const { userId } = res.locals.user;
-    // console.log(userId, nickname);
-
-    const getLikes = await Likes.findAll({
-      attributes: [
-        ['PostId', 'postId'], 
-        ['UserId', 'userId'],
-        'createdAt',
-        'updatedAt',
-        [sequelize.fn('COUNT', sequelize.col('PostId')), 'like'],
+    res.locals.user;
+    const getLikes = await Posts.findAll({
+      attributes: ['postId', 'title', 'createdAt', 'updatedAt'],
+      include: [
+        {
+          model: Users,
+          attributes: ['userId', 'nickname']
+        },
+        {
+          model: Likes,
+          attributes: [[sequelize.fn('COUNT', sequelize.col('Likes.PostId')), 'count']]
+        } 
       ],
-      group: ['PostId']
+      group: ['postId'],
+      order: [['createdAt', 'DESC']],
     });
 
-    const arrGetLikes = [...getLikes];
-    
-    const setLikes = arrGetLikes.map((item) => {item.like
+    const setLikes = getLikes.map((item)=>{
+      return {
+        postId: item.postId,
+        userId: item.User.userId,
+        nickname: item.User.nickname,
+        title: item.title,
+        like: item.Likes[0].dataValues.count,
+        createdAt: item.createdAt,
+        updatedAt: item.updatedAt
+      }
     });
-
     return res.status(200).json({ posts: setLikes });
-    return res.status(200).json();
   } catch (error) {
     console.error(error);
     return res.status(400).json({ errorMessage: "좋아요 게시글 조회에 실패하였습니다." });
   }
-})
+});
+
 
 module.exports = router;
