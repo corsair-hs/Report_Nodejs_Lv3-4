@@ -76,29 +76,6 @@ router.get("/posts", async (req, res) => {
   }
 });
 
-// 좋아요 게시글 조회
-router.get("/posts/like", authMiddleware, async (req, res) => {
-  try {
-    res.locals.user;
-    const getLikes = await Likes.findAll({
-      attributes: [
-        ['PostId', 'postId'], 
-        ['UserId', 'userId'], 
-        [sequelize.literal('(SELECT nickname FROM Users WHERE Users.userId = (SELECT UserId FROM Posts WHERE Posts.postId = Likes.PostId))'), 'nickname'],
-        [sequelize.literal('(SELECT title FROM Posts WHERE Posts.postId = Likes.PostId)'), 'title'],
-        'createdAt', 
-        'updatedAt',
-        [sequelize.fn('COUNT', sequelize.col('PostId')), 'like'],
-      ],
-      group: ['PostId'],
-    })
-    return res.status(200).json({ posts: getLikes });
-  } catch (error) {
-    console.error(error);
-    return res.status(400).json({ errorMessage: "좋아요 게시글 조회에 실패하였습니다." });
-  }
-});
-
 // 게시글 상세 조회
 router.get("/posts/:postId", async (req, res) => {
   try {
