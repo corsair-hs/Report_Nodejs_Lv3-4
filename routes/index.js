@@ -8,8 +8,9 @@ const Likes = require('./likes.route.js');
 const router = express.Router();
 
 router.use('/', Users);
+router.use('/', Likes);
 router.use('/', Posts);
 router.use('/', Comments);
-router.use('/', Likes);
+
 
 module.exports = router;
