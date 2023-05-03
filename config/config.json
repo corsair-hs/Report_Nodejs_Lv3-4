@@ -2,7 +2,7 @@
   "development": {
     "username": "raxniper",
     "password": "4321aaaa",
-    "database": "report_lv3_sequelize_relation",
+    "database": "db_report_lv4",
     "host": "express-database.civvkhubmkux.ap-northeast-2.rds.amazonaws.com",
     "dialect": "mysql"
   },
